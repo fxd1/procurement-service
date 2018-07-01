@@ -13,7 +13,6 @@ create table if not EXISTS `user`(
    `create_time` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP  COMMENT '当前时间',
    `update_time` TIMESTAMP ON UPDATE CURRENT_TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT  '更新时间',
    PRIMARY KEY (`id`),
-   UNIQUE KEY `uniq_origin_dest_city_name_mode` (origin,dest,city_name,mode)
 )ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4 COMMENT='用户表';
 
 create table if not EXISTS `address`(
@@ -25,7 +24,7 @@ create table if not EXISTS `address`(
    `create_time` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP  COMMENT '当前时间',
    `update_time` TIMESTAMP ON UPDATE CURRENT_TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT  '更新时间',
    PRIMARY KEY (`id`),
-   UNIQUE KEY `uniq_origin_dest_city_name_mode` (origin,dest,city_name,mode)
+   UNIQUE KEY `uniq_user_id` (user_id)
 )ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4 COMMENT='地址表';
 
 create table if not EXISTS `good`(
@@ -40,6 +39,8 @@ create table if not EXISTS `good`(
    `create_time` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP  COMMENT '当前时间',
    `update_time` TIMESTAMP ON UPDATE CURRENT_TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT  '更新时间',
    PRIMARY KEY (`id`),
+   KEY `user_id_index`(user_id),
+   KEY `class_id_index`(class_id),
    UNIQUE KEY `uniq_origin_dest_city_name_mode` (origin,dest,city_name,mode)
 )ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4 COMMENT='物品';
 
@@ -49,5 +50,22 @@ create table if not EXISTS `class`(
    `create_time` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP  COMMENT '当前时间',
    `update_time` TIMESTAMP ON UPDATE CURRENT_TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT  '更新时间',
    PRIMARY KEY (`id`),
-   UNIQUE KEY `uniq_origin_dest_city_name_mode` (origin,dest,city_name,mode)
 )ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4 COMMENT=' 种类';
+
+
+create table if not EXISTS `group_buy`(
+   `id` int(32) unsigned NOT NULL AUTO_INCREMENT COMMENT 'id',
+   `good_id` int(32) NOT NULL DEFAULT '' COMMENT '商品id',
+   `user_id` int(32) NOT NULL DEFAULT '' COMMENT '发起人',
+   `sum` int(32) NOT NULL DEFAULT '' COMMENT '拼团总人数',
+   `current_count` int(32) NOT NULL DEFAULT '' COMMENT '拼团人数',
+   `origin_price` int(32) NOT NULL DEFAULT '' COMMENT '发起人价格',
+   `sponsor_price` int(32) NOT NULL DEFAULT '' COMMENT '拼团价格',
+   `group_price` int(32) NOT NULL DEFAULT '' COMMENT '发起人价格',
+   `status` tinyint NOT NULL DEFAULT 0 COMMENT '状态：0：正常 -1：取消 1：拼团失败 2：拼团成功',
+   `create_time` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP  COMMENT '当前时间',
+   `deadline_time` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP  COMMENT '截止时间',
+   `update_time` TIMESTAMP ON UPDATE CURRENT_TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT  '更新时间',
+   PRIMARY KEY (`id`),
+   KEY `good_id` (good_id)
+)ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4 COMMENT=' 拼团';
